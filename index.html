@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Vertical Buttons</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #fcfcfc;
+            color: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        main {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: #111111;
+        }
+
+        .stack {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        button {
+            background-color: #ffffff;
+            color: #111111;
+            border: 1px solid #d1d5db;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background-color: #f3f4f6;
+            border-color: #9ca3af;
+        }
+
+        button:active {
+            background-color: #e5e7eb;
+        }
+
+        .display-box {
+            flex: 1;
+            min-height: 40px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .display-box.active {
+            color: #111111;
+            font-weight: 500;
+            border-color: #d1d5db;
+        }
+
+        @media (max-width: 480px) {
+            .row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .display-box {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <header>
+            <h1>Select an Option</h1>
+        </header>
+
+        <div class="stack">
+            <div class="row">
+                <button onclick="handleButtonClick(1)">Button One</button>
+                <div id="box-1" class="display-box">Empty</div>
+            </div>
+
+            <div class="row">
+                <button onclick="handleButtonClick(2)">Button Two</button>
+                <div id="box-2" class="display-box">Empty</div>
+            </div>
+
+            <div class="row">
+                <button onclick="handleButtonClick(3)">Button Three</button>
+                <div id="box-3" class="display-box">Empty</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        /**
+         * Custom functions returning dynamic string messages
+         */
+        function func1() {
+            if (typeof DeviceOrientationEvent.requestPermission === "function") {
+                setBoxText(1, "requestPermission is function");
+            } else {
+                setBoxText(1, "requestPermission is not a function");
+            }
+        }
+
+        function func2() {
+            DeviceOrientationEvent.requestPermission().then((response) => {
+                if (response === "granted") {
+                    setBoxText(2, "granted");
+                } else {
+                    setBoxText(2, "not granted");
+                }
+            })
+        }
+
+        function func3() {
+            window.addEventListener('deviceorientation', (event) => {
+                if (event.alpha === null) {
+                    setBoxText(3, "null");
+                } else {
+                    setBoxText(3, event.alpha.toString());
+                }
+            });
+        }
+
+        /**
+         * Invokes the function associated with the button and updates the corresponding text box
+         * @param {number} id - Target box ID number
+         */
+        function handleButtonClick(id) {
+            // Call corresponding custom function based on button clicked
+            switch (id) {
+                case 1:
+                    func1();
+                    break;
+                case 2:
+                    func2();
+                    break;
+                case 3:
+                    func3();
+                    break;
+            }
+        }
+
+        function setBoxText(id, text) {
+            const box = document.getElementById('box-' + id);
+            if (box) {
+                box.textContent = text;
+                box.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
